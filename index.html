@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>清迈集市时间表 · Chiang Mai Market Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --maroon:#8c2f2f;
+    --maroon-dark:#6b2020;
+    --gold:#c99a3b;
+    --gold-light:#e8c778;
+    --teal:#0f6b64;
+    --teal-dark:#0a4d47;
+    --cream:#fbf3e1;
+    --cream-2:#f6e8c8;
+    --ink:#3a2a1a;
+    --paper:#fffaf0;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Noto Serif SC","Kanit",serif;
+    background:
+      radial-gradient(circle at 10% 10%, rgba(201,154,59,0.12), transparent 40%),
+      radial-gradient(circle at 90% 20%, rgba(140,47,47,0.10), transparent 45%),
+      radial-gradient(circle at 50% 90%, rgba(15,107,100,0.10), transparent 45%),
+      var(--cream);
+    color:var(--ink);
+    padding:24px 14px 60px;
+  }
+  button{font:inherit;cursor:pointer;}
+  .wrap{max-width:880px;margin:0 auto;}
+
+  /* Header */
+  header{
+    position:relative;
+    background:linear-gradient(135deg,var(--maroon) 0%, var(--maroon-dark) 100%);
+    border-radius:20px;
+    padding:34px 28px 28px;
+    color:var(--cream);
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(107,32,32,0.25);
+    border:2px solid var(--gold);
+  }
+  header .motif{
+    position:absolute; top:0; right:0; opacity:0.18; width:220px; height:220px;
+    pointer-events:none;
+  }
+  header .motif-left{
+    position:absolute; bottom:-30px; left:-20px; opacity:0.15; width:160px; height:160px;
+    pointer-events:none; transform:scaleX(-1);
+  }
+  .eyebrow{
+    font-family:"Kanit",sans-serif;
+    letter-spacing:0.35em;
+    font-size:12px;
+    text-transform:uppercase;
+    color:var(--gold-light);
+    margin-bottom:6px;
+  }
+  h1{
+    margin:0 0 8px;
+    font-size:30px;
+    line-height:1.3;
+    font-weight:700;
+    position:relative;
+    z-index:1;
+  }
+  h1 .th{
+    display:block;
+    font-family:"Kanit",sans-serif;
+    font-size:15px;
+    font-weight:400;
+    color:var(--gold-light);
+    margin-top:6px;
+    letter-spacing:0.02em;
+  }
+  header p.sub{
+    margin:14px 0 0;
+    font-size:14px;
+    color:#f3e2c2;
+    max-width:520px;
+    line-height:1.7;
+    position:relative;
+    z-index:1;
+  }
+
+  /* Day filter tabs (interactive) */
+  .day-filter-label{
+    font-family:"Kanit",sans-serif;
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--gold-light);
+    opacity:0.85;
+    margin:20px 0 8px;
+    position:relative;
+    z-index:1;
+  }
+  .days{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    position:relative;
+    z-index:1;
+  }
+  .day-btn{
+    font-family:"Kanit",sans-serif;
+    font-size:13.5px;
+    font-weight:500;
+    padding:8px 16px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.08);
+    color:var(--gold-light);
+    border:none;
+    transition:background 0.15s, color 0.15s, transform 0.1s;
+  }
+  .day-btn:hover{background:rgba(255,255,255,0.18);}
+  .day-btn.active{
+    background:var(--gold);
+    color:var(--maroon-dark);
+    font-weight:700;
+  }
+  .day-btn:active{transform:scale(0.97);}
+
+  /* Section title */
+  .section-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:34px 0 16px;
+  }
+  .section-title .dot{
+    width:10px;height:10px;border-radius:50%;
+    background:var(--gold);
+    box-shadow:0 0 0 4px rgba(201,154,59,0.2);
+    flex:none;
+  }
+  .section-title h2{
+    margin:0;
+    font-size:19px;
+    color:var(--maroon-dark);
+    font-weight:700;
+    flex:none;
+  }
+  .section-title .line{
+    flex:1;
+    height:1px;
+    background:linear-gradient(90deg, rgba(201,154,59,0.6), transparent);
+  }
+  /* Day cards */
+  .day-card{
+    background:var(--paper);
+    border-radius:16px;
+    border:1px solid rgba(201,154,59,0.35);
+    box-shadow:0 6px 18px rgba(107,32,32,0.06);
+    margin-bottom:16px;
+    overflow:hidden;
+  }
+  .day-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:14px 18px;
+    background:linear-gradient(90deg, var(--teal), var(--teal-dark));
+    color:#eafaf6;
+  }
+  .day-head .date{
+    font-family:"Kanit",sans-serif;
+    font-weight:600;
+    font-size:16px;
+  }
+  .day-head .weekday{
+    font-size:13px;
+    opacity:0.85;
+    font-family:"Kanit",sans-serif;
+  }
+  .day-head .flag{
+    font-size:11px;
+    background:rgba(255,255,255,0.15);
+    padding:3px 10px;
+    border-radius:999px;
+    font-family:"Kanit",sans-serif;
+    letter-spacing:0.03em;
+  }
+  .market-list{
+    list-style:none;
+    margin:0;
+    padding:12px 10px 14px;
+  }
+  .market-list li{
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+    padding:12px;
+    border-radius:12px;
+    transition:background 0.15s;
+  }
+  .market-list li:hover{
+    background:rgba(201,154,59,0.08);
+  }
+  .time-chip{
+    flex:none;
+    font-family:"Kanit",sans-serif;
+    font-weight:600;
+    font-size:13px;
+    color:var(--maroon-dark);
+    background:var(--cream-2);
+    border:1px solid rgba(201,154,59,0.5);
+    border-radius:8px;
+    padding:5px 9px;
+    min-width:96px;
+    text-align:center;
+    white-space:nowrap;
+  }
+  .item-body{flex:1;min-width:0;}
+  .item-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:8px;
+  }
+  .market-name{
+    font-size:15.5px;
+    font-weight:600;
+    color:var(--ink);
+    padding-top:1px;
+  }
+  .market-note{
+    display:block;
+    font-family:"Kanit",sans-serif;
+    font-weight:400;
+    font-size:12.5px;
+    color:#8a6b3f;
+    margin-top:2px;
+  }
+  .market-meta{
+    font-family:"Kanit",sans-serif;
+    font-size:12.5px;
+    color:#8a6b3f;
+    margin-top:3px;
+  }
+  .tag-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-top:8px;
+  }
+  .tag-pill{
+    font-family:"Kanit",sans-serif;
+    font-size:11.5px;
+    background:var(--cream-2);
+    border:1px solid rgba(201,154,59,0.4);
+    color:var(--ink);
+    padding:3px 9px;
+    border-radius:999px;
+  }
+  .market-desc{
+    font-size:13px;
+    color:#5c4a34;
+    margin-top:7px;
+    line-height:1.6;
+  }
+  .map-link{
+    display:inline-block;
+    margin-top:8px;
+    font-family:"Kanit",sans-serif;
+    font-size:12.5px;
+    color:var(--teal-dark);
+    text-decoration:none;
+    border-bottom:1px dashed var(--teal);
+  }
+  .thumb{
+    margin-top:9px;
+    width:100%;
+    max-width:220px;
+    height:110px;
+    border-radius:10px;
+    background:#e7dcc3 center/cover no-repeat;
+    border:1px solid rgba(201,154,59,0.4);
+  }
+  .empty-note{
+    padding:14px 18px;
+    font-size:14px;
+    color:#8a6b3f;
+    font-style:italic;
+  }
+  .flight-li .time-chip{
+    background:var(--maroon);
+    color:#fff;
+    border-color:var(--maroon-dark);
+  }
+  .flight-li .market-name{color:var(--maroon-dark);}
+
+  /* Other night markets (其余夜市) */
+  .cmu-card{
+    background:var(--paper);
+    border-radius:16px;
+    border:1px dashed rgba(140,47,47,0.4);
+    padding:6px 8px 12px;
+  }
+  .cmu-card .cmu-note{
+    font-family:"Kanit",sans-serif;
+    font-size:12.5px;
+    color:#8a6b3f;
+    padding:10px 10px 0;
+  }
+
+  /* Tips */
+  .tips-card{
+    background:linear-gradient(180deg, var(--cream-2), var(--cream));
+    border-radius:16px;
+    border:1px solid rgba(201,154,59,0.4);
+    padding:6px 6px 10px;
+  }
+  .tips-card ul{
+    list-style:none;
+    margin:0;
+    padding:8px;
+  }
+  .tips-card li{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    padding:10px 10px;
+    border-bottom:1px dashed rgba(140,47,47,0.18);
+    font-size:14.5px;
+    line-height:1.6;
+  }
+  .tips-card li:last-child{border-bottom:none;}
+  .tip-icon{
+    flex:none;
+    width:26px;height:26px;
+    border-radius:50%;
+    background:var(--maroon);
+    color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:13px;
+    font-family:"Kanit",sans-serif;
+    margin-top:1px;
+  }
+
+  footer{
+    text-align:center;
+    margin-top:30px;
+    font-family:"Kanit",sans-serif;
+    font-size:12px;
+    color:#a3814f;
+  }
+
+  @media (max-width:480px){
+    h1{font-size:24px;}
+    .day-head{flex-wrap:wrap;}
+    .time-chip{min-width:82px;font-size:12px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <svg class="motif" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <g fill="none" stroke="#e8c778" stroke-width="2">
+        <path d="M20 180 L100 20 L180 180 Z"></path>
+        <path d="M40 180 L100 60 L160 180 Z"></path>
+        <circle cx="100" cy="30" r="6" fill="#e8c778" stroke="none"></circle>
+      </g>
+    </svg>
+    <svg class="motif-left" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <g fill="none" stroke="#e8c778" stroke-width="2">
+        <path d="M100 170 C60 170 40 140 40 110 C40 90 55 80 60 60 C65 80 75 85 75 105 C75 90 90 80 90 60 C95 85 105 90 105 110 C130 100 135 130 100 170 Z"></path>
+      </g>
+    </svg>
+    <div class="eyebrow">Chiang Mai · ตลาด · 泰北集市指南</div>
+    <h1>以集市为导向的清迈小指南
+      <span class="th">ยินดีต้อนรับ · 欢迎姐姐来清迈逛集市</span>
+    </h1>
+    <p class="sub">姐姐可以浏览后根据自己的时间选择比较感兴趣的集市，我这里集市没有列全，如果姐姐有其他比较感兴趣的集市也可以告诉我，我来做攻略~</p>
+
+    <div class="day-filter-label">按日期找 · Find by date</div>
+    <div class="days" id="dayFilters"></div>
+  </header>
+
+  <div class="section-title">
+    <div class="dot"></div>
+    <h2 id="marketTitle">每日集市时间</h2>
+    <div class="line"></div>
+  </div>
+  <div id="dayCards"></div>
+
+  <div class="section-title">
+    <div class="dot"></div>
+    <h2>其余夜市</h2>
+    <div class="line"></div>
+  </div>
+  <div class="cmu-card">
+    <div class="cmu-note">这些是长期开的夜市</div>
+    <div id="extraCards"></div>
+  </div>
+
+  <div class="section-title">
+    <div class="dot"></div>
+    <h2>出行小贴士</h2>
+    <div class="line"></div>
+  </div>
+  <div class="tips-card">
+    <ul>
+      <li>
+        <span class="tip-icon">☂</span>
+        <span>清迈现在是雨季，但下雨时间不固定，最好随身带一把便携雨伞；白天不下雨时阳光强烈，还是要注意防晒。</span>
+      </li>
+      <li>
+        <span class="tip-icon">📶</span>
+        <span>流量卡可以在淘宝上搜"泰国流量卡"，选择Happy卡或者AIS卡，一是比国内运营商漫游上网速度快，二是也比在泰国机场或便利店买电话卡便宜。</span>
+      </li>
+      <li>
+        <span class="tip-icon">🛂</span>
+        <span>入境时可能会问住址和返程信息，建议提前截图以防万一。</span>
+      </li>
+      <li>
+        <span class="tip-icon">💳</span>
+        <span>这边支付宝、微信支付覆盖挺多的，但最好还是带一点现金或信用卡，以防万一。</span>
+      </li>
+      <li>
+        <span class="tip-icon">💧</span>
+        <span>这边水质不好，介意的话可以带过滤花洒；喝水一般喝便利店矿泉水，当地几乎不喝热水。</span>
+      </li>
+      <li>
+        <span class="tip-icon">👟</span>
+        <span>逛集市要走不少路，建议姐姐穿一双舒服的平底鞋。</span>
+      </li>
+      <li>
+        <span class="tip-icon">🦟</span>
+        <span>清迈蚊虫比较多也比较毒，晚上更明显，可以到 711 买一瓶小的驱蚊液随身带着～</span>
+      </li>
+    </ul>
+  </div>
+
+  <footer>สวัสดี · 祝清迈之旅愉快 🌸</footer>
+</div>
+
+<script>
+const dayDefs = [
+  {key:"0930", date:"9.30", weekday:"周三"},
+  {key:"1001", date:"10.1", weekday:"周四"},
+  {key:"1002", date:"10.2", weekday:"周五"},
+  {key:"1003", date:"10.3", weekday:"周六"},
+  {key:"1004", date:"10.4", weekday:"周日"},
+];
+const allTab = {key:"all", date:"全部", weekday:""};
+const tabs = [allTab, ...dayDefs];
+
+let dayData = {
+  "0930": {
+    empty:"当天没有安排固定集市，可以先熟悉一下住处附近～",
+    items:[
+      {time:"17:00-21:00", name:"清迈大学前/后门夜市", location:"清迈大学 Suthep 校区前门/后门一带（后门夜市又称 Langmor Night Market）", photo:"", tags:"小吃·服饰·手作", note:"后门夜市都是吃的，前门有一些衣服，小手作之类的", desc:"后门夜市本地学生氛围浓，义面、打抛猪肉双蛋饭、芝士薯条、泰北香肠、海鲜冬阴功面都很受欢迎，两人吃一顿约200-300泰铢；前门夜市摊位更多，以服饰、手作小物为主。", map:"https://www.google.com/maps/search/?api=1&query=Chiang+Mai+University+Suthep+Gate+Night+Market", flight:false}
+    ]
+  },
+  "1001": {
+    items:[
+      {time:"15:00–23:00", name:"宁曼路白色集市", location:"尼曼路 One Nimman 商场旁", photo:"", tags:"服饰·手工配饰·工艺品", note:"网红打卡集市，好逛好拍（官方营业到22:00左右，逛到尽兴就好）", desc:"带日系文青风的迷你市集，紧邻 One Nimman，适合逛完宁曼路商圈后顺路过来。", map:"https://www.google.com/maps/search/?api=1&query=White+Market+One+Nimman+Chiang+Mai", flight:false}
+    ]
+  },
+  "1002": {
+    items:[
+      {time:"08:00–15:00", name:"椰林集市", location:"Fa Ham 区，距古城东北约15分钟车程", photo:"", tags:"美食·手作·拍照", note:"白天场，可安排上午逛，建议10点前到人少光线好", desc:"由废弃椰子林改造的文创市集，椰林步道适合拍照，还能吃到椰子冰淇淋、香蕉叶烤蛋、泰北香肠等小吃。", map:"https://www.google.com/maps/search/?api=1&query=Coconut+Market+Ba+Pao+Flea+Market+Chiang+Mai", flight:false},
+      {time:"15:00–23:00", name:"宁曼路白色集市", location:"尼曼路 One Nimman 商场旁", photo:"", tags:"服饰·手工配饰·工艺品", note:"下午到晚上都能逛", desc:"", map:"https://www.google.com/maps/search/?api=1&query=White+Market+One+Nimman+Chiang+Mai", flight:false}
+    ]
+  },
+  "1003": {
+    flag:"集市最多的一天",
+    items:[
+      {time:"07:00–14:00", name:"JJ Market", location:"Jing Jai Market，Nimmanhaemin / Sirimangkalajarn Soi 17 一带", photo:"", tags:"手作·农产品·美食", note:"早市，建议早点去", desc:"清迈规模最大的手作与农夫市集，摊位过百个，主打原创设计与本地小农产品。", map:"https://www.google.com/maps/search/?api=1&query=Jing+Jai+Market+Chiang+Mai", flight:false},
+      {time:"08:00–15:00", name:"椰林集市", location:"Fa Ham 区，距古城东北约15分钟车程", photo:"", tags:"美食·手作·拍照", note:"", desc:"", map:"https://www.google.com/maps/search/?api=1&query=Coconut+Market+Ba+Pao+Flea+Market+Chiang+Mai", flight:false},
+      {time:"09:00–14:00", name:"雨林集市", location:"San Kamphaeng 区，离古城车程约20-30分钟", photo:"", tags:"手作服饰·首饰·工艺品", note:"", desc:"孟族社区里的文青向手作市集（又名雨树市集 Chamcha Market），氛围安静清新，适合慢慢逛。", map:"https://www.google.com/maps/search/?api=1&query=Chamcha+Market+San+Kamphaeng+Chiang+Mai", flight:false},
+      {time:"18:00–23:00", name:"周六夜市", location:"Wua Lai Road（古城南边清迈门外）", photo:"", tags:"银饰·手作·小吃·按摩", note:"Saturday Walking Street · 周末重头戏", desc:"清迈传统“打银街”，能看到工匠现场捶打雕刻银饰，路边还有不少脚底按摩摊。", map:"https://www.google.com/maps/search/?api=1&query=Wua+Lai+Saturday+Walking+Street+Chiang+Mai", flight:false}
+    ]
+  },
+  "1004": {
+    flag:"返程日，注意时间",
+    items:[
+      {time:"07:00–12:00", name:"JJ Market", location:"Jing Jai Market，Nimmanhaemin / Sirimangkalajarn Soi 17 一带", photo:"", tags:"手作·农产品·美食", note:"", desc:"", map:"https://www.google.com/maps/search/?api=1&query=Jing+Jai+Market+Chiang+Mai", flight:false},
+      {time:"09:00–14:00", name:"椰林集市", location:"Fa Ham 区，距古城东北约15分钟车程", photo:"", tags:"美食·手作·拍照", note:"", desc:"", map:"https://www.google.com/maps/search/?api=1&query=Coconut+Market+Ba+Pao+Flea+Market+Chiang+Mai", flight:false},
+      {time:"09:00–14:00", name:"雨林集市", location:"San Kamphaeng 区，离古城车程约20-30分钟", photo:"", tags:"手作服饰·首饰·工艺品", note:"", desc:"", map:"https://www.google.com/maps/search/?api=1&query=Chamcha+Market+San+Kamphaeng+Chiang+Mai", flight:false},
+      {time:"17:00", name:"塔佩门夜市", location:"Tha Pae Gate → Ratchadamnoen Road（古城东门一路向西约1公里）", photo:"", tags:"手作·服饰·纪念品·小吃", note:"Sunday Walking Street · 时间较紧，注意飞机", desc:"清迈最具代表性的周日步行街，摊位从塔佩门一路延伸约1公里，规模很大。", map:"https://www.google.com/maps/search/?api=1&query=Sunday+Walking+Street+Tha+Pae+Gate+Chiang+Mai", flight:false},
+      {time:"18:40", name:"✈ 飞机", location:"", photo:"", tags:"", note:"请预留好去机场的时间，别逛太晚", desc:"", map:"", flight:true}
+    ]
+  },
+  "extra": {
+    items:[
+      {time:"每日 17:00–22:00", name:"长康路夜市", location:"Chang Klan Road（清迈观光夜市 Chiang Mai Night Bazaar）", photo:"", tags:"小吃·手工艺品·服饰·纪念品", note:"", desc:"全年无休的大型观光夜市，长康路两侧数百米摊位与店铺，商业化但品类很全。", map:"https://www.google.com/maps/search/?api=1&query=Chiang+Mai+Night+Bazaar", flight:false},
+      {time:"周末约 08:00–11:00（平日为常设艺术村）", name:"艺术村", location:"Baan Kang Wat，191-197 Moo 5 Suthep Rd", photo:"", tags:"手作·咖啡·文创", note:"", desc:"老村屋改造的艺术社区，坐落在机场与素贴山之间，聚集十余位艺术家，有咖啡店、手作店、日杂小店，周末还会有市集摆摊。", map:"https://www.google.com/maps/search/?api=1&query=Baan+Kang+Wat+Chiang+Mai", flight:false},
+      {time:"每日 17:00–24:00", name:"阿努善夜市", location:"14-15 Chang Klan Road（长康路夜市区域内）", photo:"", tags:"手工艺品·创意商品·家居杂货", note:"", desc:"以职人手创商品为主，木制厨房用品、特色灯具、皮革小物、泰式包包都比较有特色，是长康路一带最推荐的购物点。", map:"https://www.google.com/maps/search/?api=1&query=Anusarn+Market+Chiang+Mai", flight:false}
+    ]
+  }
+};
+
+let activeDay = "1002";
+
+function esc(s){return String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function escAttr(s){return String(s??"").replace(/"/g,"&quot;");}
+
+function renderTabs(){
+  document.getElementById("dayFilters").innerHTML = tabs.map(d=>{
+    const label = d.weekday ? `${d.date} ${d.weekday}` : d.date;
+    return `<button class="day-btn ${activeDay===d.key?'active':''}" onclick="filterDay('${d.key}')">${label}</button>`;
+  }).join("");
+}
+
+function renderItem(dayKey, idx, m){
+  const photoHtml = m.photo ? `<div class="thumb" style="background-image:url('${escAttr(m.photo)}')"></div>` : "";
+  const tagsHtml = m.tags ? `<div class="tag-row">${m.tags.split("·").map(t=>t.trim()).filter(Boolean).map(t=>`<span class="tag-pill">${esc(t)}</span>`).join("")}</div>` : "";
+  return `
+      <li${m.flight?' class="flight-li"':''}>
+        <span class="time-chip">${esc(m.time)}</span>
+        <div class="item-body">
+          <div class="item-top">
+            <div class="market-name">${esc(m.name)}</div>
+          </div>
+          ${m.location ? `<div class="market-meta">📍 ${esc(m.location)}</div>` : ""}
+          ${m.note ? `<span class="market-note">${esc(m.note)}</span>` : ""}
+          ${tagsHtml}
+          ${m.desc ? `<div class="market-desc">${esc(m.desc)}</div>` : ""}
+          ${m.map ? `<a class="map-link" href="${escAttr(m.map)}" target="_blank">📍 打开地图</a>` : ""}
+          ${photoHtml}
+        </div>
+      </li>`;
+}
+
+function renderDayCard(key){
+  const def = dayDefs.find(d=>d.key===key);
+  const data = dayData[key];
+  const head = `
+    <div class="day-head">
+      <div>
+        <div class="date">${def.date}</div>
+        <div class="weekday">${def.weekday}</div>
+      </div>
+      ${data.flag ? `<div class="flag">${esc(data.flag)}</div>` : ""}
+    </div>`;
+  let body;
+  if(!data.items.length){
+    body = `<div class="empty-note">${esc(data.empty || "")}</div>`;
+  } else {
+    body = `<ul class="market-list">` + data.items.map((m,i)=>renderItem(key,i,m)).join("") + `</ul>`;
+  }
+  return `<div class="day-card">${head}${body}</div>`;
+}
+
+function renderExtra(){
+  const data = dayData["extra"];
+  const container = document.getElementById("extraCards");
+  let body;
+  if(!data.items.length){
+    body = `<div class="empty-note">还没有添加其他夜市～</div>`;
+  } else {
+    body = `<ul class="market-list">` + data.items.map((m,i)=>renderItem("extra",i,m)).join("") + `</ul>`;
+  }
+  container.innerHTML = body;
+}
+
+function render(){
+  renderTabs();
+  const titleEl = document.getElementById("marketTitle");
+  const container = document.getElementById("dayCards");
+  if(activeDay === "all"){
+    titleEl.textContent = "每日集市时间";
+    container.innerHTML = dayDefs.map(d=>renderDayCard(d.key)).join("");
+  } else {
+    const def = dayDefs.find(d=>d.key===activeDay);
+    titleEl.textContent = `${def.date} ${def.weekday} 的集市`;
+    container.innerHTML = renderDayCard(activeDay);
+  }
+  renderExtra();
+}
+
+function filterDay(key){
+  activeDay = key;
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
